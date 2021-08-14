@@ -1,59 +1,56 @@
 {% extends "blog/base.html" %}
 {% block content %}
-{% for post in posts %}
-{% if post.author.id == user.id  %}
-  <article class="media content-section">
-    <div class="media-body">
-        <hr />
-        <div class="article-metadata">
-            <img class="rounded-circle" width="80" height="80" src="{{user.profile.image.url}}">
-            <a class="mr-1" href="#">{{ post.author }} </a>
-            <small class="text-muted">{{ post.date }}</small>
-        </div>
-        <h3><a class="article-title" href="/post/{{post.id}}">{{ post.title }}</a></h3>
-        <p class="article-content">{{ post.content }}</p>
+   {% if page_obj.num_pages > 4 %}
+     {% for post in posts %}
+         
+
+                  <article class="media content-section">
+                       <div class="media-body">
+                          <hr />
+                          <div class="article-metadata">
+                                      <img class="rounded-circle" width="80" height="80" src="{{post.author.profile.image.url}}">
+                                       <a class="mr-1" href="#">{{ post.author }} </a>
+                                       <small class="text-muted">{{ post.date }}</small>
+                          </div>
+                          <h3><a class="article-title" href="/post/{{post.id}}">{{ post.title }} </a></h3>
+                          <p class="article-content">{{ post.content }}</p>
         
-        <a class="btn btn-outline-info " href="/post/{{post.id}}/update"> Update </a>
-        <a class="btn btn-outline-danger " href="/post/{{post.id}}/delete"> Delete </a>
+                          <a class="btn btn-outline-info " href="/post/{{post.id}}/update"> Update </a>
+                          <a class="btn btn-outline-danger " href="/post/{{post.id}}/delete"> Delete </a>
 
-        <hr />
-    </div>
-  </article>
+                         <hr />
+                      </div>
+                 </article>
 
-{%endif%}  
-{% endfor %}
+          {%endifequal%}  
+     {% endfor %} 
 {% if is_paginated %}
-{% if page_obj.has_previous %}
-<a class="btn btn-outline-info mb-4" href="?page=1"> First </a>
-<a class="btn btn-outline-info mb-4" href="?page={{page_obj.previous_page_number}}"> Previous </a>
-{% endif %}
+     {% if page_obj.has_previous %}
+              <a class="btn btn-outline-info mb-4" href="?page=1"> First </a>
+              <a class="btn btn-outline-info mb-4" href="?page={{page_obj.previous_page_number}}"> Previous </a>
+     {% endif %}
 
-{% for num in page_obj.paginator.page_range%}
-{% if page_obj.number == num%}
-<a class="btn btn-outline-info mb-4" href="?page={{num}}"> {{num}}</a>
+      {% for num in page_obj.paginator.page_range%}
+          {% if page_obj.number == num%}
+                 <a class="btn btn-outline-info mb-4" href="?page={{num}}"> {{num}}</a>
+          {% endif %}
 
-{% elif num < page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
- <a class="btn btn-outline-info mb-4"  href="?page={{num}}"> {{num}} </a>
- <a class="btn btn-outline-info mb-4" href="?page={{num}}"> {{num}} </a>
-  <a class="btn btn-outline-info mb-4" href="?page={{num}}"> {{num}} </a>
-{% endif %}
+      {%endfor%}
 
-  {%endfor%}
-
-  {% if page_obj.has_next %}
-  <a class="btn btn-outline-info mb-4" href="?page={{page_obj.next_page_number}}"> next </a>
-  <a class="btn btn-outline-info mb-4" href="?page={{page_obj.paginator.num_pages}}"> Last </a>
-  {% endif %}
-  {%endif%}
+      {% if page_obj.has_next %}
+         <a class="btn btn-outline-info mb-4" href="?page={{page_obj.next_page_number}}"> next </a>
+         <a class="btn btn-outline-info mb-4" href="?page={{page_obj.paginator.num_pages}}"> Last </a>
+      {% endif %}
+{%endif%}
 
    
-        <div class="text-center">
+ <div class="text-center">
             <hr />
                 <a class="btn btn-outline-info btn-lg btn-block" href="/post/create">Create New Post</a>
               
               
             <hr />
-        </div>
+ </div>
   
 
 
