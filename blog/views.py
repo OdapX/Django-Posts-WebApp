@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from .models import post
 from django.views.generic import ListView, DetailView, CreateView, DeleteView, UpdateView
+from django.contrib.messages.views import SuccessMessageMixin
 
 
 class PostView(ListView):
@@ -24,7 +25,7 @@ class DetailView(DetailView):
     model = post
 
 
-class CreateView(LoginRequiredMixin, CreateView):
+class CreateView(SuccessMessageMixin, LoginRequiredMixin, CreateView):
     model = post
     fields = ['title', 'content']
 
@@ -32,8 +33,13 @@ class CreateView(LoginRequiredMixin, CreateView):
         form.instance.author = self.request.user
         return super().form_valid(form)
 
+    success_message = "blog was created successfully"
 
-class UpdateView(UserPassesTestMixin, LoginRequiredMixin, UpdateView):
+    def get_success_message(self, cleaned_data):
+        return self.success_message
+
+
+class UpdateView(SuccessMessageMixin, UserPassesTestMixin, LoginRequiredMixin, UpdateView):
     model = post
     fields = ['title', 'content']
 
@@ -48,11 +54,15 @@ class UpdateView(UserPassesTestMixin, LoginRequiredMixin, UpdateView):
             return True
         else:
             return False
+    success_message = "blog was Updated successfully"
+
+    def get_success_message(self, cleaned_data):
+        return self.success_message
 
 
 class DeleteView(UserPassesTestMixin, LoginRequiredMixin, DeleteView):
     model = post
-    sucess_url = '/home'
+    success_url = '/about'
 
     def test_func(self):
         post = self.get_object()
@@ -60,3 +70,7 @@ class DeleteView(UserPassesTestMixin, LoginRequiredMixin, DeleteView):
             return True
         else:
             return False
+    success_message = "blog was deleted successfully"
+
+    def get_success_message(self, cleaned_data):
+        return self.success_message
